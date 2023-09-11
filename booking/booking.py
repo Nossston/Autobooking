@@ -16,12 +16,13 @@ class Booking(webdriver.Chrome):
     def land_first_page(self):
         self.get(const.BASE_URL)
         self.maximize_window()
-        time.sleep(2)
+        time.sleep(1.5)
         print("waiting to close")
         time.sleep(1)
-        close = self.find_element(By.CSS_SELECTOR,'#b2indexPage > div.b9720ed41e.cdf0a9297c > div > div > div > div.dd5dccd82f > div.ffd93a9ecb.dc19f70f85.eb67815534.e91f709929 > div > button')
-        close.click()
+        close_but = self.find_element(By.XPATH,'//*[@aria-label="Dismiss sign in information."]')
+        close_but.click()
     
+    # for result page testing
     def land_result_page(self):
         self.get(const.RESULT_URL)
         self.maximize_window()
