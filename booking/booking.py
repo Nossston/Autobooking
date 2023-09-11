@@ -49,6 +49,7 @@ class Booking(webdriver.Chrome):
         time.sleep(.8)
         first_result = self.find_element(By.CSS_SELECTOR,'#indexsearch > div.hero-banner-searchbox > div > form > div.ffb9c3d6a3.db27349d3a.cc9bf48a25 > div:nth-child(1) > div > div > div.a7631de79e > div > ul > li:nth-child(1) > div')
         first_result.click() 
+        
     def select_dates(self,check_in_date,check_out_date):
         time.sleep(.5)
         check_in_element = self.find_element(By.CSS_SELECTOR,f'span[data-date="{check_in_date}"]')
