@@ -8,13 +8,9 @@ from prettytable import PrettyTable
 
 class Booking(webdriver.Chrome):
     def __int__(self,teardown=False):
-        # self.teardown = teardown
-        # driver = webdriver.Chrome()
         super(Booking,self).__init__()
         
     def __exit__(self, exc_type, exc_val,exc_tb):
-        # if self.teardown:
-        # self.quit()
         None
                 
     def land_first_page(self):
