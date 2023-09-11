@@ -7,21 +7,27 @@ import time
 from prettytable import PrettyTable
 
 class Booking(webdriver.Chrome):
-    def __int__(self,teardown=False):
+    def __int__(self):
         super(Booking,self).__init__()
         
     def __exit__(self, exc_type, exc_val,exc_tb):
         None
                 
     def land_first_page(self):
-        self.get(const.BASE_URL)
-        self.maximize_window()
-        time.sleep(1.5)
-        print("waiting to close")
-        time.sleep(1)
-        close_but = self.find_element(By.XPATH,'//*[@aria-label="Dismiss sign in information."]')
-        close_but.click()
+        try:
+            self.get(const.BASE_URL)
+            self.maximize_window()
+        except:
+            print("fail to open landing page")
     
+        try:
+            close_but = self.find_element(By.XPATH,'//*[@aria-label="Dismiss sign-in info."]')
+            close_but.click()
+        except:
+            print("fail to click close button")
+    
+        print("succeed to land booking.com")
+        
     # for result page testing
     def land_result_page(self):
         self.get(const.RESULT_URL)
@@ -31,24 +37,29 @@ class Booking(webdriver.Chrome):
         close_but = self.find_element(By.XPATH,'//*[@aria-label="Dismiss sign in information."]')
         close_but.click()
          
-    def change_currency(self,currency_code):
-        button = self.find_element(By.XPATH,'//*[@id="b2indexPage"]/div[2]/div/header/nav[1]/div[2]/span[1]/button/span')
-        button.click()
-        time.sleep(.8)
-        #  USD is on the row12, col4th
-        select_currency = self.find_element(By.CSS_SELECTOR,'#b2indexPage > div.b9720ed41e.cdf0a9297c > div > div > div > div > div.f7c2c6294c > div > div:nth-child(3) > div > div > ul:nth-child(12) > li:nth-child(4) > button')
-        select_currency.click()
-        # check text, a= sele.text.equals(USD)
-        print("change")
-        time.sleep(2)
+    def change_currency(self):
+        try:
+            # button = self.find_element(By.XPATH,'//*[@id="b2indexPage"]/div[2]/div/header/nav[1]/div[2]/span[1]/button/span')
+            button = self.find_element(By.XPATH,'//*[@data-testid="header-currency-picker-trigger"]')
+            button.click()
+            time.sleep(.5)
+            select_currency = self.find_element(By.XPATH,'//*[@class="aaee4e7cd3 e7a57abb1e fb60b9836d"]')
+            select_currency.click()
+            print("change the currency to USD")
+        except:
+            print("Failed to change currency to USD")
         
     def search_place_to_go(self,place_to_go):
-        search_field = self.find_element(By.XPATH,'//*[@id=":re:"]')
-        search_field.clear()
-        search_field.send_keys(place_to_go)
-        time.sleep(.8)
-        first_result = self.find_element(By.CSS_SELECTOR,'#indexsearch > div.hero-banner-searchbox > div > form > div.ffb9c3d6a3.db27349d3a.cc9bf48a25 > div:nth-child(1) > div > div > div.a7631de79e > div > ul > li:nth-child(1) > div')
-        first_result.click() 
+        try:
+            search_field = self.find_element(By.XPATH,'//*[@id=":re:"]')
+            search_field.clear()
+            search_field.send_keys(place_to_go)
+            time.sleep(.5)
+            first_result = self.find_element(By.XPATH,'//*[@tabindex="-1"]')
+            first_result.click()
+        except:
+            print("Failed to search place to go.") 
+        
     def select_dates(self,check_in_date,check_out_date):
         time.sleep(.5)
         check_in_element = self.find_element(By.CSS_SELECTOR,f'span[data-date="{check_in_date}"]')
