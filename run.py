@@ -4,7 +4,7 @@ with Booking() as bot:
     # needs to apply error handle
     
     bot.land_first_page()
-    bot.change_currency(currency_code="USD")
+    bot.change_currency()
     bot.search_place_to_go(input("Where do you want to go? :"))
     bot.select_dates(check_in_date= input("What is your check in date? :"),
                      check_out_date=input("What is your check out date? :"))
