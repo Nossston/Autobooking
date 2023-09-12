@@ -101,7 +101,7 @@ class Booking(webdriver.Chrome):
         selection_element.click()
         time.sleep(.8)
         # 2 is magic, default number
-        if count<2:
+        if count < 2:
             while True:
                 decrease_adult = self.find_element(By.CSS_SELECTOR,'#indexsearch > div.hero-banner-searchbox > div > form > div.ffb9c3d6a3.db27349d3a.cc9bf48a25 > div:nth-child(3) > div > div > div > div > div:nth-child(1) > div.bfb38641b0 > button.a83ed08757.c21c56c305.f38b6daa18.d691166b09.ab98298258.deab83296e.bb803d8689.e91c91fa93')
                 decrease_adult.click()
@@ -115,12 +115,12 @@ class Booking(webdriver.Chrome):
             for _ in range(count - 2):
                 increase_adult.click()
         print("suc")
-        time.sleep(2)
+        time.sleep(1)
         
     def click_search(self):
         search_but = self.find_element(By.CSS_SELECTOR,'button[type=submit]')
         search_but.click()
-        time.sleep(3)
+        time.sleep(2)
         
     def apply_filtrations(self):
         filtration = BookingFiltration(driver=self)
