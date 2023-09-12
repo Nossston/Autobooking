@@ -51,32 +51,40 @@ class Booking(webdriver.Chrome):
         
         ########
     def select_dates(self,check_in_date,check_out_date):
+        # handle formating
+        check_in_date = datetime.strptime(check_in_date,'%Y-%m-%d').date()
+        check_out_date = datetime.strptime(check_out_date,'%Y-%m-%d').date()
+        thisyear = datetime.now().year
+        thismonth = datetime.now().month
+        
         # check-in section
-        time.sleep(.5)
         try:
-            check_in_advance = ((datetime.strptime(check_in_date,'%Y-%m-%d').year - datetime.now().year) * 12 + datetime.strptime(check_in_date,'%Y-%m-%d').month - datetime.now().month)
-            print(check_in_advance)
-            if check_in_advance > 0:
-                next_button = self.find_element(By.XPATH, '//*[@id="indexsearch"]/div[2]/div/form/div[1]/div[2]/div/div[2]/div/div/div[1]/button')
+            check_in_advance = ((check_in_date.year - thisyear) * 12 + check_in_date.month - thismonth)
+            print( f'months ahead:{check_in_advance}' )
+            next_button = self.find_element(By.XPATH, '//*[@class="a83ed08757 c21c56c305 f38b6daa18 d691166b09 f671049264 deab83296e f4552b6561 dc72a8413c f073249358"]')
+
+            if check_in_advance > 1:
                 # next_button = self.find_element(By.XPATH,'//*[@xmlns="http://www.w3.org/2000/svg"]')
                 for _ in range(int(check_in_advance)):
                     next_button.click()
-                    time.sleep(5)
-            check_in_element = self.find_element(By.CSS_SELECTOR,f'span[data-date="{check_in_date}"]')
-            check_in_element.click()
         except Exception as e:
             print(f"error happens: {e}")
+        check_in_element = self.find_element(By.CSS_SELECTOR,f'span[data-date="{check_in_date}"]')
+        check_in_element.click()
+        
         # check-out section
-        check_out_advance = ((datetime.strptime(check_out_date,'%Y-%m-%d').year - datetime.now().year) * 12 + datetime.strptime(check_out_date,'%Y-%m-%d').month - datetime.now().month)/2
-        print(check_out_advance)
-
-        if check_out_advance > 0:
-            next_button = self.find_element(By.XPATH, '//*[@id="indexsearch"]/div[2]/div/form/div[1]/div[2]/div/div[2]/div/div/div[1]/button')
-            for _ in range(int(check_out_advance)):
-                next_button.click()
+        time.sleep(.5)
+        try:
+            check_out_advance = ((check_out_date.year - check_in_date.year) * 12 + check_out_date.month - check_in_date.month)
+            print( f'check out months ahead:{check_out_advance}' )
+            next_button = self.find_element(By.XPATH, '//*[@class="a83ed08757 c21c56c305 f38b6daa18 d691166b09 f671049264 deab83296e f4552b6561 dc72a8413c f073249358"]')
+            if check_out_advance > 1:
+                for _ in range(int(check_out_advance)):
+                    next_button.click()
+        except Exception as e:
+            print(f"error happens: {e}")            
         check_out_element = self.find_element(By.CSS_SELECTOR,f'span[data-date="{check_out_date}"]')
         check_out_element.click()
-        time.sleep(.8)
         
     def select_adults(self,count):
         selection_element = self.find_element(By.CSS_SELECTOR,'#indexsearch > div.hero-banner-searchbox > div > form > div.ffb9c3d6a3.db27349d3a.cc9bf48a25 > div:nth-child(3) > div > button')
