@@ -7,60 +7,44 @@ import time
 from prettytable import PrettyTable
 from datetime import datetime
 
-
 class Booking(webdriver.Chrome):
-    def __int__(self):
+    def __int__(self,teardown=False):
         super(Booking,self).__init__()
         
     def __exit__(self, exc_type, exc_val,exc_tb):
         None
                 
     def land_first_page(self):
-        try:
-            self.get(const.BASE_URL)
-            self.maximize_window()
-        except:
-            print("fail to open landing page")
-    
-        try:
-            close_but = self.find_element(By.XPATH,'//*[@aria-label="Dismiss sign-in info."]')
-            close_but.click()
-        except:
-            print("fail to click close button")
-    
-        print("succeed to land booking.com")
+        self.get(const.BASE_URL)
+        self.maximize_window()
+        time.sleep(1)
+        self.find_element(By.XPATH,'//*[@aria-label="Dismiss sign-in info."]').click()
         
+    
     # for result page testing
     def land_result_page(self):
         self.get(const.RESULT_URL)
         self.maximize_window()
         print("waiting to close")
         time.sleep(1)
-        close_but = self.find_element(By.XPATH,'//*[@aria-label="Dismiss sign in information."]')
-        close_but.click()
+        self.find_element(By.XPATH,'//*[@aria-label="Dismiss sign in information."]').click()
          
     def change_currency(self):
-        try:
-            # button = self.find_element(By.XPATH,'//*[@id="b2indexPage"]/div[2]/div/header/nav[1]/div[2]/span[1]/button/span')
-            button = self.find_element(By.XPATH,'//*[@data-testid="header-currency-picker-trigger"]')
-            button.click()
-            time.sleep(.5)
-            select_currency = self.find_element(By.XPATH,'//*[@class="aaee4e7cd3 e7a57abb1e fb60b9836d"]')
-            select_currency.click()
-            print("change the currency to USD")
-        except:
-            print("Failed to change currency to USD")
+        # self.find_element(By.XPATH,'//*[@id="b2indexPage"]/div[2]/div/header/nav[1]/div[2]/span[1]/button/span').click()
+        self.find_element(By.XPATH,'//*[@data-testid="header-currency-picker-trigger"]').click()
+        time.sleep(1)
+        select_currency = self.find_element(By.CSS_SELECTOR,'#b2indexPage > div.b9720ed41e.cdf0a9297c > div > div > div > div > div.f7c2c6294c > div > div:nth-child(3) > div > div > ul:nth-child(12) > li:nth-child(4) > button')
+        select_currency.click()
+        print("change currency to USD")
+        time.sleep(2)
         
     def search_place_to_go(self,place_to_go):
-        try:
-            search_field = self.find_element(By.XPATH,'//*[@id=":re:"]')
-            search_field.clear()
-            search_field.send_keys(place_to_go)
-            time.sleep(.5)
-            first_result = self.find_element(By.XPATH,'//*[@tabindex="-1"]')
-            first_result.click()
-        except:
-            print("Failed to search place to go.") 
+        search_field = self.find_element(By.XPATH,'//*[@id=":re:"]')
+        search_field.clear()
+        search_field.send_keys(place_to_go)
+        time.sleep(.8)
+        first_result = self.find_element(By.CSS_SELECTOR,'#indexsearch > div.hero-banner-searchbox > div > form > div.ffb9c3d6a3.db27349d3a.cc9bf48a25 > div:nth-child(1) > div > div > div.a7631de79e > div > ul > li:nth-child(1) > div')
+        first_result.click() 
         
     def select_dates(self,check_in_date,check_out_date):
         # handle formating
@@ -97,30 +81,25 @@ class Booking(webdriver.Chrome):
         check_out_element.click()
         
     def select_adults(self,count):
-        selection_element = self.find_element(By.CSS_SELECTOR,'#indexsearch > div.hero-banner-searchbox > div > form > div.ffb9c3d6a3.db27349d3a.cc9bf48a25 > div:nth-child(3) > div > button')
+        selection_element = self.find_element(By.XPATH, '//*[@data-testid="occupancy-config"]')
         selection_element.click()
-        time.sleep(.8)
-        # 2 is magic, default number
-        if count < 2:
-            while True:
-                decrease_adult = self.find_element(By.CSS_SELECTOR,'#indexsearch > div.hero-banner-searchbox > div > form > div.ffb9c3d6a3.db27349d3a.cc9bf48a25 > div:nth-child(3) > div > div > div > div > div:nth-child(1) > div.bfb38641b0 > button.a83ed08757.c21c56c305.f38b6daa18.d691166b09.ab98298258.deab83296e.bb803d8689.e91c91fa93')
+        default_adutl = int( self.find_element(By.XPATH,'.//*[@class="d723d73d5f"]').get_attribute('innerHTML').strip())
+        
+        if count < default_adutl:
+            decrease_adult = self.find_element(By.XPATH,'//*[@class="a83ed08757 c21c56c305 f38b6daa18 d691166b09 ab98298258 deab83296e bb803d8689 e91c91fa93"]')
+            for _ in range(default_adutl - count):
                 decrease_adult.click()
-                adults_value_element = self.find_element(By.ID,'group_adults')
-                adults_value = adults_value_element.get_attribute('value')
-
-                if int(adults_value) == count:
-                    break
         else:
-            increase_adult = self.find_element(By.CSS_SELECTOR,'#indexsearch > div.hero-banner-searchbox > div > form > div.ffb9c3d6a3.db27349d3a.cc9bf48a25 > div:nth-child(3) > div > div > div > div > div:nth-child(1) > div.bfb38641b0 > button.a83ed08757.c21c56c305.f38b6daa18.d691166b09.ab98298258.deab83296e.bb803d8689.f4d78af12a')
-            for _ in range(count - 2):
+            increase_adult = self.find_element(By.XPATH,'//*[@class="a83ed08757 c21c56c305 f38b6daa18 d691166b09 ab98298258 deab83296e bb803d8689 f4d78af12a"]')
+            for _ in range(count - default_adutl):
                 increase_adult.click()
-        print("suc")
-        time.sleep(1)
+        print("succeed to select adults")
+        time.sleep(2)
         
     def click_search(self):
         search_but = self.find_element(By.CSS_SELECTOR,'button[type=submit]')
         search_but.click()
-        time.sleep(2)
+        time.sleep(3)
         
     def apply_filtrations(self):
         filtration = BookingFiltration(driver=self)
