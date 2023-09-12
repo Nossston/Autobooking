@@ -5,6 +5,7 @@ from booking.booking_filtration import BookingFiltration
 from booking.booking_report import BookingReport
 import time 
 from prettytable import PrettyTable
+from datetime import datetime, timedelta
 
 class Booking(webdriver.Chrome):
     def __int__(self,teardown=False):
@@ -16,10 +17,8 @@ class Booking(webdriver.Chrome):
     def land_first_page(self):
         self.get(const.BASE_URL)
         self.maximize_window()
-        time.sleep(1.5)
-        print("waiting to close")
         time.sleep(1)
-        close_but = self.find_element(By.XPATH,'//*[@aria-label="Dismiss sign in information."]')
+        close_but = self.find_element(By.XPATH,'//*[@aria-label="Dismiss sign-in info."]')
         close_but.click()
     
     # for result page testing
@@ -50,11 +49,31 @@ class Booking(webdriver.Chrome):
         first_result = self.find_element(By.CSS_SELECTOR,'#indexsearch > div.hero-banner-searchbox > div > form > div.ffb9c3d6a3.db27349d3a.cc9bf48a25 > div:nth-child(1) > div > div > div.a7631de79e > div > ul > li:nth-child(1) > div')
         first_result.click() 
         
+        ########
     def select_dates(self,check_in_date,check_out_date):
+        # check-in section
         time.sleep(.5)
-        check_in_element = self.find_element(By.CSS_SELECTOR,f'span[data-date="{check_in_date}"]')
-        check_in_element.click()
-        time.sleep(.8)
+        try:
+            check_in_advance = ((datetime.strptime(check_in_date,'%Y-%m-%d').year - datetime.now().year) * 12 + datetime.strptime(check_in_date,'%Y-%m-%d').month - datetime.now().month)
+            print(check_in_advance)
+            if check_in_advance > 0:
+                next_button = self.find_element(By.XPATH, '//*[@id="indexsearch"]/div[2]/div/form/div[1]/div[2]/div/div[2]/div/div/div[1]/button')
+                # next_button = self.find_element(By.XPATH,'//*[@xmlns="http://www.w3.org/2000/svg"]')
+                for _ in range(int(check_in_advance)):
+                    next_button.click()
+                    time.sleep(5)
+            check_in_element = self.find_element(By.CSS_SELECTOR,f'span[data-date="{check_in_date}"]')
+            check_in_element.click()
+        except Exception as e:
+            print(f"error happens: {e}")
+        # check-out section
+        check_out_advance = ((datetime.strptime(check_out_date,'%Y-%m-%d').year - datetime.now().year) * 12 + datetime.strptime(check_out_date,'%Y-%m-%d').month - datetime.now().month)/2
+        print(check_out_advance)
+
+        if check_out_advance > 0:
+            next_button = self.find_element(By.XPATH, '//*[@id="indexsearch"]/div[2]/div/form/div[1]/div[2]/div/div[2]/div/div/div[1]/button')
+            for _ in range(int(check_out_advance)):
+                next_button.click()
         check_out_element = self.find_element(By.CSS_SELECTOR,f'span[data-date="{check_out_date}"]')
         check_out_element.click()
         time.sleep(.8)
