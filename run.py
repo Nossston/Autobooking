@@ -1,8 +1,6 @@
 from booking.booking  import Booking
 
 with Booking() as bot:
-    # needs to apply error handle
-    
     bot.land_first_page()
     bot.change_currency()
     bot.search_place_to_go(input("Where do you want to go? :"))

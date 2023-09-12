@@ -29,7 +29,6 @@ class BookingReport:
                 collection.append( [hotel_name,hotel_price,hotel_score])
             except:
                 print("Error with finding hotel's info")
-                time.sleep(2)
         
         return collection
         
