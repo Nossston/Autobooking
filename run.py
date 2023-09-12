@@ -9,7 +9,7 @@ with Booking() as bot:
     # bot.search_place_to_go(input("Where do you want to go? :"))
     # bot.select_dates(check_in_date= input("What is your check in date? format is like 2023-09-01 :"),
                     #  check_out_date=input("What is your check out date? format is like 2023-09-05:"))
-    bot.select_dates(check_in_date="2023-10-01",check_out_date="2023-12-05")
+    # bot.select_dates(check_in_date="2023-01-01",check_out_date="2024-03-05")
     bot.select_adults(int(input("How many people? :")))
     bot.click_search()
     

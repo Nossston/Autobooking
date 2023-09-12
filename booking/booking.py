@@ -5,7 +5,7 @@ from booking.booking_filtration import BookingFiltration
 from booking.booking_report import BookingReport
 import time 
 from prettytable import PrettyTable
-from datetime import datetime, timedelta
+from datetime import datetime
 
 class Booking(webdriver.Chrome):
     def __int__(self,teardown=False):
@@ -62,9 +62,7 @@ class Booking(webdriver.Chrome):
             check_in_advance = ((check_in_date.year - thisyear) * 12 + check_in_date.month - thismonth)
             print( f'months ahead:{check_in_advance}' )
             next_button = self.find_element(By.XPATH, '//*[@class="a83ed08757 c21c56c305 f38b6daa18 d691166b09 f671049264 deab83296e f4552b6561 dc72a8413c f073249358"]')
-
             if check_in_advance > 1:
-                # next_button = self.find_element(By.XPATH,'//*[@xmlns="http://www.w3.org/2000/svg"]')
                 for _ in range(int(check_in_advance)):
                     next_button.click()
         except Exception as e:
@@ -87,24 +85,19 @@ class Booking(webdriver.Chrome):
         check_out_element.click()
         
     def select_adults(self,count):
-        selection_element = self.find_element(By.CSS_SELECTOR,'#indexsearch > div.hero-banner-searchbox > div > form > div.ffb9c3d6a3.db27349d3a.cc9bf48a25 > div:nth-child(3) > div > button')
+        selection_element = self.find_element(By.XPATH, '//*[@data-testid="occupancy-config"]')
         selection_element.click()
-        time.sleep(.8)
-        # 2 is magic, default number
-        if count<2:
-            while True:
-                decrease_adult = self.find_element(By.CSS_SELECTOR,'#indexsearch > div.hero-banner-searchbox > div > form > div.ffb9c3d6a3.db27349d3a.cc9bf48a25 > div:nth-child(3) > div > div > div > div > div:nth-child(1) > div.bfb38641b0 > button.a83ed08757.c21c56c305.f38b6daa18.d691166b09.ab98298258.deab83296e.bb803d8689.e91c91fa93')
+        default_adutl = int( self.find_element(By.XPATH,'.//*[@class="d723d73d5f"]').get_attribute('innerHTML').strip())
+        
+        if count < default_adutl:
+            decrease_adult = self.find_element(By.XPATH,'//*[@class="a83ed08757 c21c56c305 f38b6daa18 d691166b09 ab98298258 deab83296e bb803d8689 e91c91fa93"]')
+            for _ in range(default_adutl - count):
                 decrease_adult.click()
-                adults_value_element = self.find_element(By.ID,'group_adults')
-                adults_value = adults_value_element.get_attribute('value')
-
-                if int(adults_value) == count:
-                    break
         else:
-            increase_adult = self.find_element(By.CSS_SELECTOR,'#indexsearch > div.hero-banner-searchbox > div > form > div.ffb9c3d6a3.db27349d3a.cc9bf48a25 > div:nth-child(3) > div > div > div > div > div:nth-child(1) > div.bfb38641b0 > button.a83ed08757.c21c56c305.f38b6daa18.d691166b09.ab98298258.deab83296e.bb803d8689.f4d78af12a')
-            for _ in range(count - 2):
+            increase_adult = self.find_element(By.XPATH,'//*[@class="a83ed08757 c21c56c305 f38b6daa18 d691166b09 ab98298258 deab83296e bb803d8689 f4d78af12a"]')
+            for _ in range(count - default_adutl):
                 increase_adult.click()
-        print("suc")
+        print("succeed to select adults")
         time.sleep(2)
         
     def click_search(self):
