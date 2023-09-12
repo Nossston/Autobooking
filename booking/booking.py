@@ -1,13 +1,15 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-import booking.constants as const
 from booking.booking_filtration import BookingFiltration
 from booking.booking_report import BookingReport
-import time 
 from prettytable import PrettyTable
 from datetime import datetime
+from selenium.webdriver.support.ui import WebDriverWait
+import booking.constants as const
+import time 
 
 class Booking(webdriver.Chrome):
+
     def __int__(self,teardown=False):
         super(Booking,self).__init__()
         
@@ -15,28 +17,36 @@ class Booking(webdriver.Chrome):
         None
                 
     def land_first_page(self):
-        self.get(const.BASE_URL)
-        self.maximize_window()
-        time.sleep(1)
-        self.find_element(By.XPATH,'//*[@aria-label="Dismiss sign-in info."]').click()
-        
-    
-    # for result page testing
+        try:
+            self.get(const.BASE_URL)
+            self.maximize_window()
+            # WebDriverWait(self,3).until(
+            self.find_element(By.XPATH,'//*[@aria-label="Dismiss sign-in info."]').click()
+            # )
+        except:
+            print("Error happens when landing booking.com")
+        print("Succeed to land booking.com")
+
     def land_result_page(self):
-        self.get(const.RESULT_URL)
-        self.maximize_window()
-        print("waiting to close")
-        time.sleep(1)
-        self.find_element(By.XPATH,'//*[@aria-label="Dismiss sign in information."]').click()
+        try:
+            self.get(const.RESULT_URL)
+            self.maximize_window()
+            time.sleep(1)
+            self.find_element(By.XPATH,'//*[@aria-label="Dismiss sign in information."]').click()
+        except:
+            print("Failed to land booking.com")     
+        print("Succeed to land booking.com")
          
     def change_currency(self):
-        # self.find_element(By.XPATH,'//*[@id="b2indexPage"]/div[2]/div/header/nav[1]/div[2]/span[1]/button/span').click()
-        self.find_element(By.XPATH,'//*[@data-testid="header-currency-picker-trigger"]').click()
         time.sleep(1)
-        select_currency = self.find_element(By.CSS_SELECTOR,'#b2indexPage > div.b9720ed41e.cdf0a9297c > div > div > div > div > div.f7c2c6294c > div > div:nth-child(3) > div > div > ul:nth-child(12) > li:nth-child(4) > button')
-        select_currency.click()
-        print("change currency to USD")
-        time.sleep(2)
+        try:
+            self.find_element(By.XPATH,'//*[@data-testid="header-currency-picker-trigger"]').click()
+            time.sleep(.5)
+            self.find_element(By.XPATH,'//*[@class="a83ed08757 aee4999c52 ffc914f84a c39dd9701b ac7953442b"]').click()
+            print("Succeed to change currency to USD")
+        except:
+            print("Error happens when changing currency to USD")
+        time.sleep(.5)
         
     def search_place_to_go(self,place_to_go):
         search_field = self.find_element(By.XPATH,'//*[@id=":re:"]')
