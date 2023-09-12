@@ -107,13 +107,12 @@ class Booking(webdriver.Chrome):
         time.sleep(2)
         
     def click_search(self):
-        search_but = self.find_element(By.CSS_SELECTOR,'button[type=submit]')
-        search_but.click()
+        self.find_element(By.CSS_SELECTOR,'button[type=submit]').click()
         time.sleep(3)
         
     def apply_filtrations(self):
         filtration = BookingFiltration(driver=self)
-        filtration.apply_start_rating(3,4,5)
+        filtration.apply_star_rating(3,4,5)
         filtration.sort_price_lowest_first()
         
     def report_results(self):
