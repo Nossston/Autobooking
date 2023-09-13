@@ -5,8 +5,11 @@
 ![Results displayed in the terminal](image-1.png)
 
 Users can use this Python script to automate hotel searches on Booking.com.
+
 It allows users to specify the location, number of nights, and the number of adults.
-The script will automatically filter and select 3-5 star hotels, sort the results by the lowest price, and display the results in a user-friendly table format using PrettyTable.
+
+The script will automatically filter and select 3-5 star hotels, sort the results by the lowest
+price, and display the results in a user-friendly table format using PrettyTable.
 
 ## Version: MacOS, selenium4.11.2
 
