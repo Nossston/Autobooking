@@ -66,7 +66,7 @@ class Booking(webdriver.Chrome):
         # check-in section
         try:
             check_in_advance = ((check_in_date.year - thisyear) * 12 + check_in_date.month - thismonth)
-            print( f'months ahead:{check_in_advance}' )
+            # print( f'months ahead:{check_in_advance}' )
             next_button = self.find_element(By.XPATH, '//*[@class="a83ed08757 c21c56c305 f38b6daa18 d691166b09 f671049264 deab83296e f4552b6561 dc72a8413c f073249358"]')
             if check_in_advance > 1:
                 for _ in range(int(check_in_advance)):
@@ -80,7 +80,7 @@ class Booking(webdriver.Chrome):
         time.sleep(.5)
         try:
             check_out_advance = ((check_out_date.year - check_in_date.year) * 12 + check_out_date.month - check_in_date.month)
-            print( f'check out months ahead:{check_out_advance}' )
+            # print( f'check out months ahead:{check_out_advance}' )
             next_button = self.find_element(By.XPATH, '//*[@class="a83ed08757 c21c56c305 f38b6daa18 d691166b09 f671049264 deab83296e f4552b6561 dc72a8413c f073249358"]')
             if check_out_advance > 1:
                 for _ in range(int(check_out_advance)):
@@ -108,7 +108,7 @@ class Booking(webdriver.Chrome):
         
     def click_search(self):
         self.find_element(By.CSS_SELECTOR,'button[type=submit]').click()
-        time.sleep(3)
+        time.sleep(2)
         
     def apply_filtrations(self):
         filtration = BookingFiltration(driver=self)

@@ -11,11 +11,9 @@ class BookingFiltration:
         try:            
             star_filtration_box =  self.driver.find_element(By.XPATH,'//*[@data-filters-group="class"]')    
         except:
-            # star_filtration_box =  self.driver.find_element(By.XPATH,'/html/body/div[4]/div/div[2]/div/div[2]/div[3]/div[1]/div[3]/div[10]')
             print("Failed to find the star box, under booking_filtration")
-        
+                    
         star_child_elements = star_filtration_box.find_elements(By.CSS_SELECTOR,'*')
-        
         try:
             for star_value in star_values:
                 for star_element in star_child_elements:
@@ -28,9 +26,14 @@ class BookingFiltration:
         
     def sort_price_lowest_first(self):
         time.sleep(1)
-        list_option = self.driver.find_element(By.XPATH,'//*[@data-testid="sorters-dropdown-trigger"]')
-        list_option.click()
-        time.sleep(1)
-        element = list_option.find_element(By.XPATH,'//*[@data-id="price"]')
-        element.click()
-        time.sleep(1)   
+        try:
+            list_option = self.driver.find_element(By.XPATH,'//*[@data-testid="sorters-dropdown-trigger"]')
+            list_option.click()
+            time.sleep(1)
+            element = list_option.find_element(By.XPATH,'//*[@data-id="price"]')
+            element.click()
+        except:
+            print("Failed to sort price from lowest")
+        print("Succeed to sort price from lowest")
+
+        

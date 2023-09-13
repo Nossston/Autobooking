@@ -24,8 +24,8 @@ class BookingReport:
                 # Pull price
                 hotel_price = deal_box.find_element(By.XPATH,'.//*[@data-testid="price-and-discounted-price"]').get_attribute('innerHTML').strip()
                 # Pull score
-                a = (deal_box.find_element(By.XPATH,'.//div[contains(@aria-label,"Scored")]'))
-                hotel_score = a.text
+                element = (deal_box.find_element(By.XPATH,'.//div[contains(@aria-label,"Scored")]'))
+                hotel_score = element.text
                 collection.append( [hotel_name,hotel_price,hotel_score])
             except:
                 print("Error with finding hotel's info")
